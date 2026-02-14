@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MessageFlow AI - Sentiment Analysis Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        .glass-dark {
+            background: rgba(30, 30, 60, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .message-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .message-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card {
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="glass-dark border-b border-white border-opacity-10">
+        <div class="max-w-7xl mx-auto px-6 py-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white tracking-tight">MessageFlow AI</h1>
+                    <p class="text-sm text-gray-300 mt-1">Real-time Sentiment Analysis Platform</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-200 border border-green-500 border-opacity-30">
+                        System Online
+                    </span>
+                    <span class="text-xs text-gray-400">v1.0.0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card rounded-xl p-6 stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Messages</p>
+                        <p id="stat-total" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-xl p-6 stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Completed</p>
+                        <p id="stat-completed" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-xl p-6 stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Pending</p>
+                        <p id="stat-pending" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-xl p-6 stat-card">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Spam Detected</p>
+                        <p id="stat-spam" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Sidebar -->
+            <div class="space-y-6">
+                
+                <!-- Input Form -->
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Analyze New Message</h2>
+                    <form id="messageForm">
+                        <textarea
+                            id="messageInput"
+                            placeholder="Enter your message for sentiment analysis..."
+                            class="w-full bg-gray-50 text-gray-900 rounded-lg p-4 border border-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 resize-none h-32 transition"
+                        ></textarea>
+                        <button
+                            type="submit"
+                            id="submitBtn"
+                            class="w-full mt-4 btn-primary text-white font-semibold py-3 px-6 rounded-lg shadow-lg"
+                        >
+                            Analyze Message
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Sentiment Distribution</h2>
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-900">Recent Messages</h2>
+                        <button onclick="fetchMessages()" class="text-sm text-purple-600 hover:text-purple-700 font-medium">
+                            Refresh
+                        </button>
+                    </div>
+                    <div id="messagesList" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                        <p class="text-gray-500 text-center py-12 text-sm">Loading messages...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://127.0.0.1:8000' 
+            : window.location.origin;
+        
+        let chart = null;
+
+        function initChart() {
+            const ctx = document.getElementById('sentimentChart');
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Positive', 'Negative', 'Neutral'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#10b981', '#ef4444', '#6b7280'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                color: '#374151',
+                                font: { size: 12, weight: '500' },
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function fetchMessages() {
+            try {
+                const response = await fetch(`${API_URL}/messages/`);
+                const messages = await response.json();
+                
+                updateStats(messages);
+                renderMessages(messages);
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        function updateStats(messages) {
+            const stats = {
+                total: messages.length,
+                completed: messages.filter(m => m.status === 'completed').length,
+                pending: messages.filter(m => m.status === 'pending').length,
+                spam: messages.filter(m => m.is_spam === 1).length,
+                positive: messages.filter(m => m.sentiment === 'positive').length,
+                negative: messages.filter(m => m.sentiment === 'negative').length,
+                neutral: messages.filter(m => m.sentiment === 'neutral').length
+            };
+
+            document.getElementById('stat-total').textContent = stats.total;
+            document.getElementById('stat-completed').textContent = stats.completed;
+            document.getElementById('stat-pending').textContent = stats.pending;
+            document.getElementById('stat-spam').textContent = stats.spam;
+
+            if (chart) {
+                chart.data.datasets[0].data = [stats.positive, stats.negative, stats.neutral];
+                chart.update();
+            }
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('messagesList');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-12 text-sm">No messages yet. Create your first analysis above.</p>';
+                return;
+            }
+
+            container.innerHTML = messages.slice().reverse().map(msg => `
+                <div class="message-card bg-white rounded-lg p-4 border border-gray-100 ${getBorderColor(msg.sentiment)}">
+                    <div class="flex items-start justify-between mb-2">
+                        <p class="text-gray-800 flex-1 font-medium">${msg.content}</p>
+                        <span class="ml-3 px-2 py-1 rounded text-xs font-semibold ${getStatusBadge(msg.status)}">
+                            ${msg.status.toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    ${msg.sentiment ? `
+                        <div class="flex items-center gap-2 mt-3 flex-wrap">
+                            <span class="px-3 py-1 rounded-md text-xs font-semibold ${getSentimentBadge(msg.sentiment)}">
+                                ${msg.sentiment.toUpperCase()}
+                            </span>
+                            ${msg.sentiment_score ? `
+                                <span class="text-gray-500 text-xs font-medium">
+                                    Confidence: ${Math.abs(msg.sentiment_score).toFixed(2)}
+                                </span>
+                            ` : ''}
+                            ${msg.is_spam === 1 ? `
+                                <span class="px-3 py-1 rounded-md text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                                    SPAM
+                                </span>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+                    
+                    <p class="text-gray-400 text-xs mt-3">
+                        ID: ${msg.id} • ${new Date(msg.created_at).toLocaleString('pt-BR')}
+                    </p>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                pending: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+                completed: 'bg-green-50 text-green-700 border border-green-200',
+                failed: 'bg-red-50 text-red-700 border border-red-200'
+            };
+            return badges[status] || '';
+        }
+
+        function getSentimentBadge(sentiment) {
+            const badges = {
+                positive: 'bg-green-50 text-green-700 border border-green-200',
+                negative: 'bg-red-50 text-red-700 border border-red-200',
+                neutral: 'bg-gray-50 text-gray-700 border border-gray-200'
+            };
+            return badges[sentiment] || '';
+        }
+
+        function getBorderColor(sentiment) {
+            const colors = {
+                positive: 'border-l-green-500',
+                negative: 'border-l-red-500',
+                neutral: 'border-l-gray-400'
+            };
+            return colors[sentiment] || '';
+        }
+
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const input = document.getElementById('messageInput');
+            const btn = document.getElementById('submitBtn');
+            const content = input.value.trim();
+            
+            if (!content) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                await fetch(`${API_URL}/messages/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+
+                input.value = '';
+                fetchMessages();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to send message. Please try again.');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Analyze Message';
+        });
+
+        initChart();
+        fetchMessages();
+        setInterval(fetchMessages, 3000);
+    </script>
+</body>
+</html>

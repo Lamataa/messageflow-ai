@@ -1,0 +1,23 @@
+# API
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+
+# Validação de dados
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Banco de dados
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+
+# Mensageria
+celery==5.3.6
+redis==5.0.1
+pika==1.3.2
+
+# IA
+transformers==4.37.2
+torch==2.5.1
+
+# Utilitários
+python-dotenv==1.0.0

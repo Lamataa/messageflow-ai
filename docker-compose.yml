@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: messageflow-rabbitmq
+    ports:
+      - "5672:5672"    
+      - "15672:15672"  
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: messageflow-redis
+    ports:
+      - "6379:6379"
+
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: messageflow-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: messageflow
+      POSTGRES_PASSWORD: messageflow123
+      POSTGRES_DB: messageflow_db
+
+volumes:
+  rabbitmq_data:
+  redis_data:
+  postgres_data:
