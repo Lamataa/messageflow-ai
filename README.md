@@ -29,6 +29,16 @@ Sistemas tradicionais de análise de texto processam mensagens de forma síncron
 
 ---
 
+## Screenshots
+
+### Interface Principal
+<img width="1908" height="950" alt="CA86D38C-8E32-458C-8E25-99803680C498" src="https://github.com/user-attachments/assets/401bbdef-317e-49b6-b947-058c0bb3f49a" />
+
+### Visualização de Dados
+<img width="752" height="638" alt="DA2B23B5-2CF9-4D2C-ADBB-89BAD3B1DC11" src="https://github.com/user-attachments/assets/e6b1d877-2f61-4ffe-974b-b4ff59f96869" />
+
+---
+
 ## Funcionalidades Principais
 
 ### Análise de Sentimento com IA
